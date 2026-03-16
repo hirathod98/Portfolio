@@ -291,6 +291,60 @@ textarea.cf-input{height:120px;resize:vertical}
 <body>
 
 <!-- GRID BACKGROUND -->
+<!-- LOADING SCREEN -->
+<div id="loader" style="position:fixed;inset:0;z-index:10000;background:#0c0c0c;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease;overflow:hidden">
+  <style>
+    .cube-scene{width:120px;height:120px;perspective:600px;margin-bottom:2rem}
+    .cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:cubeRotate 3s ease-in-out infinite}
+    .cube-face{position:absolute;width:120px;height:120px;display:flex;align-items:center;justify-content:center;
+      font-family:'JetBrains Mono',sans-serif;font-size:.85rem;font-weight:700;color:#c9d1d9;
+      background:rgba(22,27,34,.9);border:1px solid #21262d;border-radius:8px;backface-visibility:visible}
+    .cube-face.front{transform:translateZ(60px)}
+    .cube-face.back{transform:rotateY(180deg) translateZ(60px)}
+    .cube-face.right{transform:rotateY(90deg) translateZ(60px)}
+    .cube-face.left{transform:rotateY(-90deg) translateZ(60px)}
+    .cube-face.top{transform:rotateX(90deg) translateZ(60px)}
+    .cube-face.bottom{transform:rotateX(-90deg) translateZ(60px)}
+    .cube-face span{font-size:1.8rem}
+    @keyframes cubeRotate{
+      0%{transform:rotateX(0) rotateY(0)}
+      25%{transform:rotateX(90deg) rotateY(90deg)}
+      50%{transform:rotateX(180deg) rotateY(180deg)}
+      75%{transform:rotateX(270deg) rotateY(270deg)}
+      100%{transform:rotateX(360deg) rotateY(360deg)}
+    }
+    .cube.explode .front{animation:explodeF .8s forwards}
+    .cube.explode .back{animation:explodeB .8s forwards}
+    .cube.explode .right{animation:explodeR .8s forwards}
+    .cube.explode .left{animation:explodeL .8s forwards}
+    .cube.explode .top{animation:explodeT .8s forwards}
+    .cube.explode .bottom{animation:explodeBt .8s forwards}
+    @keyframes explodeF{to{transform:translateZ(400px) rotateX(25deg);opacity:0}}
+    @keyframes explodeB{to{transform:rotateY(180deg) translateZ(400px) rotateX(-20deg);opacity:0}}
+    @keyframes explodeR{to{transform:rotateY(90deg) translateZ(400px) rotateZ(15deg);opacity:0}}
+    @keyframes explodeL{to{transform:rotateY(-90deg) translateZ(400px) rotateZ(-15deg);opacity:0}}
+    @keyframes explodeT{to{transform:rotateX(90deg) translateZ(400px) rotateY(20deg);opacity:0}}
+    @keyframes explodeBt{to{transform:rotateX(-90deg) translateZ(400px) rotateY(-20deg);opacity:0}}
+    .loader-text{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#484f58;letter-spacing:2px;text-transform:uppercase}
+    .loader-bar{width:200px;height:2px;background:#161b22;border-radius:1px;margin-top:1rem;overflow:hidden}
+    .loader-fill{height:100%;background:#7ee787;border-radius:1px;animation:loadFill 3s ease-in-out forwards}
+    @keyframes loadFill{0%{width:0}100%{width:100%}}
+    #loader.fade-out{opacity:0;pointer-events:none}
+  </style>
+  <div class="cube-scene">
+    <div class="cube" id="cube3d">
+      <div class="cube-face front"><span>&#9889;</span> PY</div>
+      <div class="cube-face back"><span>&#9729;&#65039;</span> AWS</div>
+      <div class="cube-face right"><span>&#129302;</span> AI</div>
+      <div class="cube-face left"><span>&#128451;&#65039;</span> SQL</div>
+      <div class="cube-face top"><span>&#128736;&#65039;</span> K8s</div>
+      <div class="cube-face bottom">HR</div>
+    </div>
+  </div>
+  <div class="loader-text">Loading portfolio</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
 <div class="grid-bg"><canvas id="gridCanvas"></canvas></div>
 
 <div class="cursor" id="cursor"></div>
@@ -711,6 +765,20 @@ textarea.cf-input{height:120px;resize:vertical}
 </footer>
 
 <script>
+// ========== 3D CUBE LOADER ==========
+document.body.style.overflow='hidden';
+const cube3d=document.getElementById('cube3d');
+const loader=document.getElementById('loader');
+
+setTimeout(()=>{
+  cube3d.classList.add('explode');
+  setTimeout(()=>{
+    loader.classList.add('fade-out');
+    document.body.style.overflow='auto';
+    setTimeout(()=>loader.remove(),800);
+  },800);
+},3200);
+
 // ========== GRID BACKGROUND ==========
 const gc=document.getElementById('gridCanvas'),gx=gc.getContext('2d');
 let gw,gh,gmx=0,gmy=0;
