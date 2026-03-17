@@ -765,6 +765,11 @@ textarea.cf-input{height:120px;resize:vertical}
 </footer>
 
 <script>
+// ========== FORCE SCROLL TO TOP ==========
+window.addEventListener('beforeunload',()=>{window.scrollTo(0,0)});
+window.addEventListener('load',()=>{setTimeout(()=>{window.scrollTo(0,0)},0)});
+history.scrollRestoration='manual';
+
 // ========== 3D CUBE LOADER ==========
 document.body.style.overflow='hidden';
 const cube3d=document.getElementById('cube3d');
